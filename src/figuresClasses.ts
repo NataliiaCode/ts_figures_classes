@@ -5,7 +5,7 @@ export interface Figure {
 }
 
 export class Triangle implements Figure {
-  shape: 'triangle' = 'triangle';
+  shape = 'triangle';
 
   color: 'red' | 'green' | 'blue';
 
@@ -16,61 +16,56 @@ export class Triangle implements Figure {
   c: number;
 
   constructor(
-    color: 'red' | 'green' | 'blue',
-    a: number,
-    b: number,
-    c: number,
+    public color: 'red' | 'green' | 'blue',
+    public a: number,
+    public b: number,
+    public c: number,
   ) {
     if (a <= 0 || b <= 0 || c <= 0) {
-      throw new Error('All sides must be greater than 0.');
+      throw new Error('All sides must be positive numbers');
     }
 
-    // Check triangle inequality theorem *before* calculating anything else
-    const sides = [a, b, c].sort((x, y) => x - y); // Ascending sort
+    const sides = [a, b, c].sort((x, y) => y - x);
 
-    if (sides[0] + sides[1] <= sides[2]) {
-      throw new Error('Invalid side lengths: Sides do not form a triangle.');
+    if (sides[0] >= sides[1] + sides[2]) {
+      throw new Error('Sides do not form a valid triangle');
     }
-    this.color = color;
-    this.a = a;
-    this.b = b;
-    this.c = c;
   }
 
   getArea(): number {
     const s = (this.a + this.b + this.c) / 2;
     const area = Math.sqrt(s * (s - this.a) * (s - this.b) * (s - this.c));
 
-    return parseFloat(area.toFixed(2)); // Use parseFloat for consistency
+    return Number(area.toFixed(2));
   }
 }
 
 export class Circle implements Figure {
-  shape: 'circle' = 'circle';
+  shape = 'circle';
 
   color: 'red' | 'green' | 'blue';
 
   radius: number;
 
-  constructor(color: 'red' | 'green' | 'blue', radius: number) {
+  constructor(
+    public color: 'red' | 'green' | 'blue',
+
+    public radius: number,
+  ) {
     if (radius <= 0) {
-      throw new Error('Radius must be greater than 0');
+      throw new Error('Radius must be a positive number');
     }
-    this.color = color;
-    this.radius = radius;
   }
 
   getArea(): number {
-    // Обчислення площі
-    const area = Math.PI * Math.pow(this.radius, 2);
+    const area = Math.PI * this.radius ** 2;
 
-    // Округлення до двох десяткових знаків
-    return Math.floor(area * 100) / 100;
+    return Math.trunc(area * 100) / 100;
   }
 }
 
 export class Rectangle implements Figure {
-  shape: 'rectangle' = 'rectangle';
+  shape = 'rectangle';
 
   color: 'red' | 'green' | 'blue';
 
@@ -78,19 +73,20 @@ export class Rectangle implements Figure {
 
   height: number;
 
-  constructor(color: 'red' | 'green' | 'blue', width: number, height: number) {
+  constructor(
+    public color: 'red' | 'green' | 'blue',
+
+    public width: number,
+
+    public height: number,
+  ) {
     if (width <= 0 || height <= 0) {
-      throw new Error('Width and height must be greater than 0.');
+      throw new Error('Width and height must be positive numbers');
     }
-    this.color = color;
-    this.width = width;
-    this.height = height;
   }
 
   getArea(): number {
-    const area = this.width * this.height;
-
-    return +area.toFixed(2);
+    return this.width * this.height;
   }
 }
 
